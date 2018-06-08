@@ -8,33 +8,35 @@ from bokeh.models import ColumnDataSource
 from bokeh.models.tools import HoverTool
 from bokeh.embed import components
 from flask import Flask, request, render_template, session
+from flask.ext.session import Session
 
 app_tdi_stock_ticker = Flask(__name__)
+app_tdi_stock_ticker.config.from_object(__name__)
+Session(app_tdi_stock_ticker)
+
+app_tdi_stock_ticker.secret_key = 'co8ryqw/oi~cg%wfk#jxycs*zg7lw48v0q$rc'
 
 @app_tdi_stock_ticker.route('/index', methods=['GET', 'POST'])
 def index_page():
     if request.method == 'GET':
         return render_template('index.html')
     else:
-        global_ticker_name = [] 
-        global_start_date = [] 
-        global_ticker_name.append(request.form.get('TickerName'))
-        global_start_date.append(request.form.get('StartDate'))
-        
-        ticker = str(global_ticker_name[0])
-        curr_date = datetime.datetime.strptime(global_start_date[0], '%Y-%m-%d').date()
-        prev_month = curr_date - datetime.timedelta(days=30)
-
-        api_key = 'gw2NbPXKQYZkf46yfNQS'
-
-        session['url'] = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(ticker) + \
-            '&date.gte=' + str(prev_month) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
+        session['ticker'] = request.form.get('TickerName')
+        session['start'] = request.form.get('StartDate')
               
         return redirect('output')       
         
 @app_tdi_stock_ticker.route('/output', methods=['GET', 'POST'])
-def output_page():  
-    url = session.get('url')
+def output_page(): 
+    
+    ticker = session.get('ticker')
+    curr_date = datetime.datetime.strptime(session.get('start'), '%Y-%m-%d').date()
+    prev_month = curr_date - datetime.timedelta(days=30)
+    api_key = 'gw2NbPXKQYZkf46yfNQS'
+
+    url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(ticker) + \
+    '&date.gte=' + str(prev_month) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
+            
     response = requests.get(url)
     meta_data = response.json()
     meta_data = response.json()

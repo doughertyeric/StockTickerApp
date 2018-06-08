@@ -38,8 +38,6 @@ def index_page():
         df = pd.DataFrame(data)
         df.columns = ['Ticker', 'Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Dividend', 
                   'Split_Ratio', 'Adj_Open', 'Adj_High', 'Adj_Low', 'Adj_Close', 'Adj_Volume']
-      
-        output_notebook()
 
         dates = pd.DataFrame(data).iloc[:,1]
         dates= pd.to_datetime(dates)

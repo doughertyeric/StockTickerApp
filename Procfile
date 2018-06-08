@@ -1,1 +1,1 @@
-web: python tdi-stock-ticker.py
+web: python tdi-stock-ticker.py --preload

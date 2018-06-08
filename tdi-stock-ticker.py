@@ -55,6 +55,7 @@ def index_page():
 
 def create_plot(df, temp, temp2, new_idx):
     
+    output_notebook()
     source = ColumnDataSource(
                 data=dict(
                     Date=pd.to_datetime(df['Date']),

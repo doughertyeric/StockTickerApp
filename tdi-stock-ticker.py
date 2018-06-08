@@ -1,3 +1,4 @@
+import os
 import requests
 import datetime
 import pandas as pd
@@ -86,4 +87,5 @@ def create_plot(df, temp, temp2, new_idx):
     return p
     
 if __name__ == '__main__':
-    app_tdi_stock_ticker.run(debug=False)
+    port = int(os.environ.get('PORT', 5000))
+    app_tdi_stock_ticker.run(host='0.0.0.0', port=port)

@@ -10,8 +10,6 @@ from flask import Flask, request, render_template
 
 app_tdi_stock_ticker = Flask(__name__)
 
-app_tdi_stock_ticker.vars={}
-
 @app_tdi_stock_ticker.route('/index_tdi_stock_ticker', methods=['GET', 'POST'])
 def index_page():
     if request.method == 'GET':
@@ -88,4 +86,4 @@ def create_plot(df, temp, temp2, new_idx):
     return p
     
 if __name__ == '__main__':
-    app_tdi_stock_ticker.run(port=33507)
+    app.run(port=33507)

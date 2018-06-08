@@ -1,1 +1,1 @@
-web: gunicorn app:app
+web: gunicorn app:tdi_stock_ticker

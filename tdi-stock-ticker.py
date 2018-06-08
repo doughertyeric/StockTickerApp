@@ -86,4 +86,4 @@ def create_plot(df, temp, temp2, new_idx):
     return p
     
 if __name__ == '__main__':
-    app_tdi_stock_ticker.run(debug=False, host='0.0.0.0', port=33507)
+    app_tdi_stock_ticker.run(debug=False, host='0.0.0.0')

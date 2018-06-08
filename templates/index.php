@@ -1,1 +1,0 @@
-<?php header( 'Location: /index_tdi_stock_ticker.html' ) ;  ?>

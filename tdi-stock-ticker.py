@@ -7,14 +7,14 @@ from bokeh.plotting import figure, show
 from bokeh.models import ColumnDataSource
 from bokeh.models.tools import HoverTool
 from bokeh.embed import components
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, session
 
 app_tdi_stock_ticker = Flask(__name__)
 
-@app_tdi_stock_ticker.route('/index_tdi_stock_ticker', methods=['GET', 'POST'])
+@app_tdi_stock_ticker.route('/index', methods=['GET', 'POST'])
 def index_page():
     if request.method == 'GET':
-        return render_template('index_tdi_stock_ticker.html')
+        return render_template('index.html')
     else:
         global_ticker_name = [] 
         global_start_date = [] 
@@ -27,35 +27,38 @@ def index_page():
 
         api_key = 'gw2NbPXKQYZkf46yfNQS'
 
-        url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(ticker) + \
+        session['url'] = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(ticker) + \
             '&date.gte=' + str(prev_month) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
-
-        response = requests.get(url)
-        meta_data = response.json()
-        meta_data = response.json()
-        data = meta_data['datatable']
-        data = data['data']
-        df = pd.DataFrame(data)
-        df.columns = ['Ticker', 'Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Dividend', 
+              
+        return redirect('output')       
+        
+@app_tdi_stock_ticker.route('/output', methods=['GET', 'POST'])
+def output_page():  
+    url = session.get('url')
+    response = requests.get(url)
+    meta_data = response.json()
+    meta_data = response.json()
+    data = meta_data['datatable']
+    data = data['data']
+    df = pd.DataFrame(data)
+    df.columns = ['Ticker', 'Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Dividend', 
                   'Split_Ratio', 'Adj_Open', 'Adj_High', 'Adj_Low', 'Adj_Close', 'Adj_Volume']
 
-        dates = pd.DataFrame(data).iloc[:,1]
-        dates= pd.to_datetime(dates)
-        temp = pd.DataFrame(data, index = dates)
-        temp = temp.iloc[:,[1,5]]
-        temp.columns = ['Date', 'Close']
+    dates = pd.DataFrame(data).iloc[:,1]
+    dates= pd.to_datetime(dates)
+    temp = pd.DataFrame(data, index = dates)
+    temp = temp.iloc[:,[1,5]]
+    temp.columns = ['Date', 'Close']
 
-        new_idx = pd.date_range(prev_month, curr_date, freq='D')
-        temp2 = temp.reindex(new_idx)
-        
-        plot = create_plot(df, temp, temp2, new_idx)
+    new_idx = pd.date_range(prev_month, curr_date, freq='D')
+    temp2 = temp.reindex(new_idx)
     
-        script, div = components(plot)
-        return render_template('output_tdi_stock_ticker.html', the_script=script, the_div=div)
+    plot = create_plot(df, temp, temp2, new_idx)
+    
+    script, div = components(plot)
+    return render_template('output.html', the_script=script, the_div=div)
 
 def create_plot(df, temp, temp2, new_idx):
-    
-    output_notebook()
     source = ColumnDataSource(
                 data=dict(
                     Date=pd.to_datetime(df['Date']),

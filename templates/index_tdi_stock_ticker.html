@@ -1,0 +1,31 @@
+<!doctype html>
+<title>Stock Ticker</title>
+<link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-0.10.0.min.css" type="text/css" />
+    
+<div class=page>
+  <h1>Monthly Closing Price Search</h1>
+    <div class=metanav>
+    
+        <h4>
+            Input a stock ticker (e.g., 'GOOG' or 'AAPL') 
+            and a date (e.g., 2016-02-03) to see the closing 
+            prices of the stock over the previous month:
+        </h4>
+
+        <form id='index_tdi_stock_ticker' method='post'> <!-- action is the URL you want to move to next-->
+            <p>
+            Stock Ticker: <input type='text' name='TickerName' />
+            </p>
+            <p>
+            Date: <input type='text' name='StartDate' />
+            </p>
+            <p>
+            <input type='submit' value='Submit' /> <!-- value is the text that will appear on the button. -->
+            </p>
+        </form>
+    </div>
+</div>
+
+
+
+

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Closing Prices</title>
+    <link href="http://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.css" rel="stylesheet">
+    <link href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.0.min.css" rel="stylesheet">
+  </head>
+  <body>
+    {{ the_div|safe }}
+    <script src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.js"></script>
+    <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.5.min.js"></script>
+    {{ the_script|safe }}
+      
+    <form id='output_tdi_stock_ticker' method='get' action='index_tdi_stock_ticker'> <!-- action is the URL you want to move to next-->
+        <p>
+        <input type='submit' value='Return' /> <!-- value is the text that will appear on the button. -->
+        </p>
+    </form>
+  </body>
+</html>

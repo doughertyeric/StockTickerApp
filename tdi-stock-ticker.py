@@ -8,11 +8,8 @@ from bokeh.models import ColumnDataSource
 from bokeh.models.tools import HoverTool
 from bokeh.embed import components
 from flask import Flask, request, render_template, session
-from flask.ext.session import Session
 
 app_tdi_stock_ticker = Flask(__name__)
-app_tdi_stock_ticker.config.from_object(__name__)
-Session(app_tdi_stock_ticker)
 
 app_tdi_stock_ticker.secret_key = 'co8ryqw/oi~cg%wfk#jxycs*zg7lw48v0q$rc'
 

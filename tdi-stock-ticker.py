@@ -57,7 +57,6 @@ def index_page():
         new_idx = pd.date_range(prev_month, curr_date, freq='D')
         temp2 = temp.reindex(new_idx)
     
-        output_notebook()
         plot = create_plot(df, temp, temp2, new_idx)
     
         script, div = components(plot)
@@ -69,6 +68,7 @@ def output_page():
         return render_template('index.html')  
 
 def create_plot(df, temp, temp2, new_idx):
+    output_notebook()
     source = ColumnDataSource(
                 data=dict(
                     Date=pd.to_datetime(df['Date']),

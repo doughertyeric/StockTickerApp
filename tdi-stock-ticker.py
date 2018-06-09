@@ -26,8 +26,8 @@ def index_page():
 @app_tdi_stock_ticker.route('/output', methods=['GET', 'POST'])
 def output_page(): 
     
-    ticker = session.get('ticker')
-    curr_date = datetime.datetime.strptime(session.get('start'), '%Y-%m-%d').date()
+    ticker = session['ticker']
+    curr_date = datetime.datetime.strptime(session['start'], '%Y-%m-%d').date()
     prev_month = curr_date - datetime.timedelta(days=30)
     api_key = 'gw2NbPXKQYZkf46yfNQS'
 

@@ -66,7 +66,7 @@ def index_page():
 @app_tdi_stock_ticker.route('/output', methods=['GET', 'POST'])
 def output_page(): 
     if request.method == 'POST':
-        return redirect(url_for('.index_page'))       
+        return render_template('index.html')  
 
 def create_plot(df, temp, temp2, new_idx):
     source = ColumnDataSource(

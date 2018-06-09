@@ -32,7 +32,7 @@ def index_page():
         session['start'] = str(start_date)
         session.modified = True
         
-        return redirect(url_for('.output_page'))       
+        return redirect(url_for('.output_page', session=session))       
         
 @app_tdi_stock_ticker.route('/output', methods=['GET', 'POST'])
 def output_page(): 
@@ -45,7 +45,7 @@ def output_page():
 
     url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(ticker) + \
     '&date.gte=' + str(prev_month) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
-    print(url, sys.stderr)
+    #print(url, sys.stderr)
             
     response = requests.get(url)
     meta_data = response.json()
@@ -64,6 +64,7 @@ def output_page():
     new_idx = pd.date_range(prev_month, curr_date, freq='D')
     temp2 = temp.reindex(new_idx)
     
+    output_notebook()
     plot = create_plot(df, temp, temp2, new_idx)
     
     script, div = components(plot)

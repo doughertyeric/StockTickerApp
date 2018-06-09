@@ -38,7 +38,7 @@ def index_page():
 
         url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(ticker) + \
         '&date.gte=' + str(prev_month) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
-    #print(url, sys.stderr)
+        print(url, sys.stderr)
             
         response = requests.get(url)
         meta_data = response.json()
@@ -65,7 +65,7 @@ def index_page():
     
 @app_tdi_stock_ticker.route('/output', methods=['GET', 'POST'])
 def output_page(): 
-    if request.method == 'POST':
+    if request.method == 'GET':
         return render_template('index.html')  
 
 def create_plot(df, temp, temp2, new_idx):

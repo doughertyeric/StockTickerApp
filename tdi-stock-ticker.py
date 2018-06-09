@@ -57,6 +57,13 @@ def index_page():
         
         #output_notebook()
         plot = create_plot(df, temp, temp2, new_idx)
+        
+        plot_resources = RESOURCES.render(
+            js_raw=INLINE.js_raw,
+            css_raw=INLINE.css_raw,
+            js_files=INLINE.js_files,
+            css_files=INLINE.css_files,
+        )
     
         script, div = components(plot)
         ticker_temp.pop()
@@ -99,6 +106,13 @@ def output_page():
         
         #output_notebook()
         plot = create_plot(df, temp, temp2, new_idx)
+        
+        plot_resources = RESOURCES.render(
+            js_raw=INLINE.js_raw,
+            css_raw=INLINE.css_raw,
+            js_files=INLINE.js_files,
+            css_files=INLINE.css_files,
+        )
     
         script, div = components(plot)
         ticker_temp.pop()

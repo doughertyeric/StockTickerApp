@@ -55,7 +55,7 @@ def index_page():
         new_idx = pd.date_range(prev_month, curr_date, freq='D')
         temp2 = temp.reindex(new_idx)
         
-        output_notebook()
+        #output_notebook()
         plot = create_plot(df, temp, temp2, new_idx)
     
         script, div = components(plot)
@@ -97,7 +97,7 @@ def output_page():
         new_idx = pd.date_range(prev_month, curr_date, freq='D')
         temp2 = temp.reindex(new_idx)
         
-        output_notebook()
+        #output_notebook()
         plot = create_plot(df, temp, temp2, new_idx)
     
         script, div = components(plot)

@@ -1,3 +1,5 @@
+from __future__ import print_function
+import sys
 import os
 import requests
 import datetime
@@ -7,32 +9,43 @@ from bokeh.plotting import figure, show
 from bokeh.models import ColumnDataSource
 from bokeh.models.tools import HoverTool
 from bokeh.embed import components
-from flask import Flask, request, render_template, session
+from flask import Flask, request, render_template
+from flask import session
 
 app_tdi_stock_ticker = Flask(__name__)
 
-app_tdi_stock_ticker.secret_key = 'co8ryqw/oi~cg%wfk#jxycs*zg7lw48v0q$rc'
+session = {'ticker':'NFLX',
+           'start': '2016-02-03'}
+
+@app_tdi_stock_ticker.route('/')
+def pre_index():
+    return render_template('index.html')
 
 @app_tdi_stock_ticker.route('/index', methods=['GET', 'POST'])
 def index_page():
     if request.method == 'GET':
         return render_template('index.html')
     else:
-        session['ticker'] = request.form.get('TickerName')
-        session['start'] = request.form.get('StartDate')
-              
-        return redirect('output')       
+        ticker = request.form['TickerName']
+        start_date = request.form['StartDate']
+        session['ticker'] = str(ticker)
+        session['start'] = str(start_date)
+        session.modified = True
+        
+        return redirect(url_for('.output_page'))       
         
 @app_tdi_stock_ticker.route('/output', methods=['GET', 'POST'])
 def output_page(): 
     
     ticker = session['ticker']
     curr_date = datetime.datetime.strptime(session['start'], '%Y-%m-%d').date()
+    curr_date = datetime.datetime(2016, 5, 1).date()
     prev_month = curr_date - datetime.timedelta(days=30)
     api_key = 'gw2NbPXKQYZkf46yfNQS'
 
     url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(ticker) + \
     '&date.gte=' + str(prev_month) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
+    print(url, sys.stderr)
             
     response = requests.get(url)
     meta_data = response.json()
@@ -40,8 +53,7 @@ def output_page():
     data = meta_data['datatable']
     data = data['data']
     df = pd.DataFrame(data)
-    df.columns = ['Ticker', 'Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Dividend', 
-                  'Split_Ratio', 'Adj_Open', 'Adj_High', 'Adj_Low', 'Adj_Close', 'Adj_Volume']
+    df.columns = ['Ticker', 'Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Dividend', 'Split_Ratio', 'Adj_Open', 'Adj_High', 'Adj_Low', 'Adj_Close', 'Adj_Volume']
 
     dates = pd.DataFrame(data).iloc[:,1]
     dates= pd.to_datetime(dates)
@@ -88,5 +100,7 @@ def create_plot(df, temp, temp2, new_idx):
     return p
     
 if __name__ == '__main__':
+    app_tdi_stock_ticker.secret_key = 'co8ryqw/oi~cg%wfk#jxycs*zg7lw48v0q$rc'
     port = int(os.environ.get('PORT', 5000))
     app_tdi_stock_ticker.run(host='0.0.0.0', port=port)
+    #app_tdi_stock_ticker.run(debug=True)

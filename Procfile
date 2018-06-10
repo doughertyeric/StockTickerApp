@@ -1,1 +1,1 @@
-web: bokeh serve --show --port 5001 app.py
+web: python app.py

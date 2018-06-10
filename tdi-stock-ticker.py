@@ -23,30 +23,26 @@ def index_page():
     if request.method == 'GET':
         return render_template('index.html')
     else:
-        global_ticker_name = [] 
-        global_start_date = [] 
-        global_ticker_name.append(request.form.get('TickerName'))
-        global_start_date.append(request.form.get('StartDate'))
-        
-        ticker = str(global_ticker_name[0])
-        curr_date = datetime.datetime.strptime(global_start_date[0], '%Y-%m-%d').date()
+        ticker_temp = []
+        start_date = []
+        ticker_temp.append(request.form['TickerName'])
+        start_date.append(request.form['StartDate'])
+        ticker = ticker_temp[0]
+        curr_date = datetime.datetime.strptime(start_date[0], '%Y-%m-%d').date()
         prev_month = curr_date - datetime.timedelta(days=30)
-
         api_key = 'gw2NbPXKQYZkf46yfNQS'
 
         url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(ticker) + \
-            '&date.gte=' + str(prev_month) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
-
+        '&date.gte=' + str(prev_month) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
+        #print(url, sys.stderr)
+            
         response = requests.get(url)
         meta_data = response.json()
         meta_data = response.json()
         data = meta_data['datatable']
         data = data['data']
         df = pd.DataFrame(data)
-        df.columns = ['Ticker', 'Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Dividend', 
-                  'Split_Ratio', 'Adj_Open', 'Adj_High', 'Adj_Low', 'Adj_Close', 'Adj_Volume']
-      
-        output_notebook()
+        df.columns = ['Ticker', 'Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Dividend', 'Split_Ratio', 'Adj_Open', 'Adj_High', 'Adj_Low', 'Adj_Close', 'Adj_Volume']
 
         dates = pd.DataFrame(data).iloc[:,1]
         dates= pd.to_datetime(dates)
@@ -56,16 +52,55 @@ def index_page():
 
         new_idx = pd.date_range(prev_month, curr_date, freq='D')
         temp2 = temp.reindex(new_idx)
-        global_ticker_name.pop() 
-        global_start_date.pop()
-        
+    
+        output_notebook()
         plot = create_plot(df, temp, temp2, new_idx)
     
         script, div = components(plot)
         return render_template('output.html', the_script=script, the_div=div)
+        
+@app_tdi_stock_ticker.route('/output', methods=['GET', 'POST'])
+def output_page(): 
+    if request.method == 'GET':
+        ticker_temp = []
+        start_date = []
+        ticker_temp.append(request.form['TickerName'])
+        start_date.append(request.form['StartDate'])
+        ticker = ticker_temp[0]
+        curr_date = datetime.datetime.strptime(start_date[0], '%Y-%m-%d').date()
+        prev_month = curr_date - datetime.timedelta(days=30)
+        api_key = 'gw2NbPXKQYZkf46yfNQS'
+
+        url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(ticker) + \
+        '&date.gte=' + str(prev_month) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
+        #print(url, sys.stderr)
+
+        response = requests.get(url)
+        meta_data = response.json()
+        meta_data = response.json()
+        data = meta_data['datatable']
+        data = data['data']
+        df = pd.DataFrame(data)
+        df.columns = ['Ticker', 'Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Dividend', 'Split_Ratio', 'Adj_Open', 'Adj_High', 'Adj_Low', 'Adj_Close', 'Adj_Volume']
+
+        dates = pd.DataFrame(data).iloc[:,1]
+        dates= pd.to_datetime(dates)
+        temp = pd.DataFrame(data, index = dates)
+        temp = temp.iloc[:,[1,5]]
+        temp.columns = ['Date', 'Close']
+
+        new_idx = pd.date_range(prev_month, curr_date, freq='D')
+        temp2 = temp.reindex(new_idx)
+
+        output_notebook()
+        plot = create_plot(df, temp, temp2, new_idx)
+
+        script, div = components(plot)
+        return render_template('output.html', the_script=script, the_div=div)
+    else:
+        return render_template('index.html')
 
 def create_plot(df, temp, temp2, new_idx):
-    
     source = ColumnDataSource(
                 data=dict(
                     Date=pd.to_datetime(df['Date']),
@@ -96,7 +131,7 @@ def create_plot(df, temp, temp2, new_idx):
     return p
     
 if __name__ == '__main__':
-    app_tdi_stock_ticker.secret_key = 'co8ryqw/oi~cg%wfk#jxycs*zg7lw48v0q$rc'
-    port = int(os.environ.get('PORT', 5000))
-    app_tdi_stock_ticker.run(host='0.0.0.0', port=port)
-    #app_tdi_stock_ticker.run(debug=True)
+    #app_tdi_stock_ticker.secret_key = 'co8ryqw/oi~cg%wfk#jxycs*zg7lw48v0q$rc'
+    #port = int(os.environ.get('PORT', 5000))
+    #app_tdi_stock_ticker.run(host='0.0.0.0', port=port)
+    app_tdi_stock_ticker.run(debug=True)

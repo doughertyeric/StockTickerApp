@@ -7,7 +7,7 @@ import pandas as pd
 from bokeh.io import curdoc
 from bokeh.layouts import row, widgetbox
 from bokeh.models import ColumnDataSource
-from bokeh.models.widgets import Slider, TextInput
+from bokeh.models.widgets import TextInput, RadioButtonGroup
 from bokeh.models.tools import HoverTool
 from bokeh.plotting import figure
 from bokeh.embed import components
@@ -64,6 +64,7 @@ p.add_tools(HoverTool(tooltips=[("Price", "@y1")], renderers=[cr], mode='vline')
 # Set up widgets
 ticker_text = TextInput(title="TickerName", value='GOOG')
 date_text = TextInput(title="StartDate", value='2016-02-03')
+temporal_button = RadioButtonGroup(labels=["1 Month", "6 Months", "1 Year"], active=0)
 
 def update_title_ticker(attrname, old, new):
     new_date = date_text.value
@@ -123,7 +124,7 @@ for w in [ticker_text, date_text]:
     w.on_change('value', update_data)
  
 # Set up layouts and add to document
-inputs = widgetbox(ticker_text, date_text)
+inputs = widgetbox(ticker_text, date_text, temporal_button)
  
 curdoc().add_root(row(inputs, p, width=800))
 curdoc().title = "Closing Prices"

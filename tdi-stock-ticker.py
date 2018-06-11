@@ -49,7 +49,7 @@ def output_page():
 
 def get_dates(new_date, window_button):
     curr_date = datetime.datetime.strptime(new_date, '%Y-%m-%d').date()
-    if windown_button == 'one_month':
+    if window_button == 'one_month':
         prev_date = curr_date - datetime.timedelta(days=30)
     elif window_button == 'six_months':
         prev_date = curr_date - datetime.timedelta(days=30.5*6)

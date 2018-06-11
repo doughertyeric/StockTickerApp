@@ -59,43 +59,54 @@ cr = p.circle('x1', 'y1', source=source, size=20,
             fill_color="grey", hover_fill_color="firebrick",
             fill_alpha=0, hover_alpha=0.6,
             line_color=None, hover_line_color=None)
-p.add_tools(HoverTool(tooltips=[("Price", "@y1")], renderers=[cr], mode='vline'))
+p.add_tools(HoverTool(tooltips=[("Price", "@y1")], renderers=[cr], mode="mouse"))
 
 # Set up widgets
-ticker_text = TextInput(title="TickerName", value='GOOG')
-date_text = TextInput(title="StartDate", value='2016-02-03')
+ticker_text = TextInput(title="Ticker Symbol", value='GOOG')
+date_text = TextInput(title="End Date", value='2016-02-03')
 temporal_button = RadioButtonGroup(labels=["1 Month", "6 Months", "1 Year"], active=0)
 
-def update_title_ticker(attrname, old, new):
-    new_date = date_text.value
+def get_dates(new_date, active_button):
     curr_date = datetime.datetime.strptime(new_date, '%Y-%m-%d').date()
-    prev_month = curr_date - datetime.timedelta(days=30)
+    if active_button == 0:
+        prev_date = curr_date - datetime.timedelta(days=30)
+    elif active_button == 1:
+        prev_date = curr_date - datetime.timedelta(days=30.5*6)
+    else:
+        prev_date = curr_date - datetime.timedelta(days=365)
+    return curr_date, prev_date
+    
+
+def update_title_ticker(attrname, old, new):
+    curr_date, prev_date = get_dates(date_text.value, temporal_button.active)
     p.title.text = str(ticker_text.value) + ' Closing Prices between ' + \
-            str(prev_month) + ' and ' + str(curr_date)
+            str(prev_date) + ' and ' + str(curr_date)
  
 ticker_text.on_change('value', update_title_ticker)
 
 def update_title_date(attrname, old, new):
-    new_date = date_text.value
-    curr_date = datetime.datetime.strptime(new_date, '%Y-%m-%d').date()
-    prev_month = curr_date - datetime.timedelta(days=30)
+    curr_date, prev_date = get_dates(date_text.value, temporal_button.active)
     p.title.text = str(ticker_text.value) + ' Closing Prices between ' + \
-            str(prev_month) + ' and ' + str(curr_date)
+            str(prev_date) + ' and ' + str(curr_date)
  
 date_text.on_change('value', update_title_date)
-    
+
+def update_title_button(attrname, old, new):
+    curr_date, prev_date = get_dates(date_text.value, temporal_button.active)
+    p.title.text = str(ticker_text.value) + ' Closing Prices between ' + \
+            str(prev_date) + ' and ' + str(curr_date)
+ 
+temporal_button.on_change('active', update_title_button)
  
 # Set up callbacks
 def update_data(attrname, old, new):
  
     # Get the current values
     new_ticker = ticker_text.value
-    new_date = date_text.value
-    curr_date = datetime.datetime.strptime(new_date, '%Y-%m-%d').date()
-    prev_month = curr_date - datetime.timedelta(days=30)
+    curr_date, prev_date = get_dates(date_text.value, temporal_button.active)
  
     # Scrape new dataset
-    url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(new_ticker) + '&date.gte=' + str(prev_month) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
+    url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(new_ticker) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
     #print(url, sys.stderr)
             
     response = requests.get(url)
@@ -112,7 +123,7 @@ def update_data(attrname, old, new):
     temp = temp.iloc[:,[1,5]]
     temp.columns = ['Date', 'Close']
 
-    new_idx = pd.date_range(prev_month, curr_date, freq='D')
+    new_idx = pd.date_range(prev_date, curr_date, freq='D')
     temp2 = temp.reindex(new_idx)
  
     source.data = dict(x1=pd.to_datetime(temp['Date']),
@@ -122,6 +133,8 @@ def update_data(attrname, old, new):
  
 for w in [ticker_text, date_text]:
     w.on_change('value', update_data)
+    
+temporal_button.on_change('active', update_data)
  
 # Set up layouts and add to document
 inputs = widgetbox(ticker_text, date_text, temporal_button)

@@ -19,12 +19,24 @@
             <p>
             Date: <input type='text' name='StartDate' />
             </p>
-            <input type="radio" name="Period" value="one_month" checked> 1 Month
-            <input type="radio" name="Price" value="close" chekced> Close<br>
-            <input type="radio" name="Period" value="six_months"> 6 Months
-            <input type="radio" name="Price" value="open"> Open<br>
-            <input type="radio" name="Period" value="one_year"> 1 Year
-            <input type="radio" name="Price" value="range"> 1 Month
+            <fieldset data-role="controlgroup" data-type="horizontal">
+                <legend>Period:</legend>
+                <label for="one_month">1 Month</label>
+                <input type="radio" name="Period" id="one_month" value="one_month">
+                <label for="six_months">6 Months</label>
+                <input type="radio" name="Period" id="six_months" value="six_months">
+                <label for="one_year">1 Year</label>
+                <input type="radio" name="Period" id="one_year" value="one_year">
+            </fieldset>
+            <fieldset data-role="controlgroup" data-type="horizontal">
+                <legend>Period:</legend>
+                <label for="close">Close</label>
+                <input type="radio" name="Period" id="close" value="close">
+                <label for="open">Open</label>
+                <input type="radio" name="Period" id="open" value="open">
+                <label for="range">Range</label>
+                <input type="radio" name="Period" id="range" value="range">
+            </fieldset>
             <p>
             <input type='submit' value='Submit' /> <!-- value is the text that will appear on the button. -->
             </p>

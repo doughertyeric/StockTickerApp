@@ -28,16 +28,15 @@ def index_page():
         ticker_temp.append(request.form['TickerName'])
         start_date.append(request.form['StartDate'])
         ticker = ticker_temp[0]
-        curr_date = datetime.datetime.strptime(start_date[0], '%Y-%m-%d').date()
-        prev_month = curr_date - datetime.timedelta(days=30)
+        curr_date, prev_date = get_dates(start_date[0])
+        
         api_key = 'gw2NbPXKQYZkf46yfNQS'
 
         url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(ticker) + \
         '&date.gte=' + str(prev_month) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
-        #print(url, sys.stderr)
+        print(url, sys.stderr)
             
         response = requests.get(url)
-        meta_data = response.json()
         meta_data = response.json()
         data = meta_data['datatable']
         data = data['data']
@@ -66,8 +65,8 @@ def output_page():
     ticker_temp.append(request.form['TickerName'])
     start_date.append(request.form['StartDate'])
     ticker = ticker_temp[0]
-    curr_date = datetime.datetime.strptime(start_date[0], '%Y-%m-%d').date()
-    prev_month = curr_date - datetime.timedelta(days=30)
+    curr_date, prev_date = get_dates(start_date[0])
+    
     api_key = 'gw2NbPXKQYZkf46yfNQS'
 
     url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(ticker) + \
@@ -75,7 +74,6 @@ def output_page():
     #print(url, sys.stderr)
             
     response = requests.get(url)
-    meta_data = response.json()
     meta_data = response.json()
     data = meta_data['datatable']
     data = data['data']
@@ -96,6 +94,11 @@ def output_page():
     
     script, div = components(plot)
     return render_template('output.html', the_script=script, the_div=div)
+
+def get_dates(new_date):
+    curr_date = datetime.datetime.strptime(new_date, '%Y-%m-%d').date()
+    prev_date = curr_date - datetime.timedelta(days=30)
+    return curr_date, prev_date
 
 def create_plot(df, temp, temp2, new_idx):
     source = ColumnDataSource(

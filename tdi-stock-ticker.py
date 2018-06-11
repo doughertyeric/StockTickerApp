@@ -13,6 +13,7 @@ from flask import Flask, request, render_template
 from flask import session
 
 app_tdi_stock_ticker = Flask(__name__)
+api_key = 'gw2NbPXKQYZkf46yfNQS'
 
 @app_tdi_stock_ticker.route('/')
 def pre_index():
@@ -23,35 +24,11 @@ def index_page():
     if request.method == 'GET':
         return render_template('index.html')
     else:
-        ticker_temp = []
-        start_date = []
-        ticker_temp.append(request.form['TickerName'])
-        start_date.append(request.form['StartDate'])
-        ticker = ticker_temp[0]
-        curr_date, prev_date = get_dates(start_date[0])
+        curr_date, prev_date = get_dates(request.form['StartDate'])
+
+        url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(request.form['TickerName']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
         
-        api_key = 'gw2NbPXKQYZkf46yfNQS'
-
-        url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(ticker) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
-        print(url, sys.stderr)
-            
-        response = requests.get(url)
-        meta_data = response.json()
-        data = meta_data['datatable']
-        data = data['data']
-        df = pd.DataFrame(data)
-        df.columns = ['Ticker', 'Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Dividend', 'Split_Ratio', 'Adj_Open', 'Adj_High', 'Adj_Low', 'Adj_Close', 'Adj_Volume']
-
-        dates = pd.DataFrame(data).iloc[:,1]
-        dates= pd.to_datetime(dates)
-        temp = pd.DataFrame(data, index = dates)
-        temp = temp.iloc[:,[1,5]]
-        temp.columns = ['Date', 'Close']
-
-        new_idx = pd.date_range(prev_date, curr_date, freq='D')
-        temp2 = temp.reindex(new_idx)
-    
-        #output_notebook()
+        df, temp, temp2, new_idx = plot_components(url)
         plot = create_plot(df, temp, temp2, new_idx)
     
         script, div = components(plot)
@@ -59,18 +36,21 @@ def index_page():
         
 @app_tdi_stock_ticker.route('/output', methods=['GET', 'POST'])
 def output_page(): 
-    ticker_temp = []
-    start_date = []
-    ticker_temp.append(request.form['TickerName'])
-    start_date.append(request.form['StartDate'])
-    ticker = ticker_temp[0]
-    curr_date, prev_date = get_dates(start_date[0])
-    
-    api_key = 'gw2NbPXKQYZkf46yfNQS'
 
-    url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(ticker) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
-    print(url, sys.stderr)
-            
+    url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(request.form['TickerName']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
+    
+    df, temp, temp2, new_idx = plot_components(url)
+    plot = create_plot(df, temp, temp2, new_idx)
+    
+    script, div = components(plot)
+    return render_template('output.html', the_script=script, the_div=div)
+
+def get_dates(new_date):
+    curr_date = datetime.datetime.strptime(new_date, '%Y-%m-%d').date()
+    prev_date = curr_date - datetime.timedelta(days=30)
+    return curr_date, prev_date
+
+def plot_components(url):
     response = requests.get(url)
     meta_data = response.json()
     data = meta_data['datatable']
@@ -86,17 +66,8 @@ def output_page():
 
     new_idx = pd.date_range(prev_date, curr_date, freq='D')
     temp2 = temp.reindex(new_idx)
-    
-    #output_notebook()
-    plot = create_plot(df, temp, temp2, new_idx)
-    
-    script, div = components(plot)
-    return render_template('output.html', the_script=script, the_div=div)
-
-def get_dates(new_date):
-    curr_date = datetime.datetime.strptime(new_date, '%Y-%m-%d').date()
-    prev_date = curr_date - datetime.timedelta(days=30)
-    return curr_date, prev_date
+    return df, temp, temp2, new_idx
+        
 
 def create_plot(df, temp, temp2, new_idx):
     source = ColumnDataSource(

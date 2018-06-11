@@ -26,6 +26,7 @@ def index_page():
     else:
         curr_date, prev_date = get_dates(request.form['StartDate'])
         url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(request.form['TickerName']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
+        print(url, file=sys.stderr)
         
         df, temp, temp2, new_idx = plot_components(url)
         plot = create_plot(df, temp, temp2, new_idx)
@@ -38,6 +39,7 @@ def output_page():
 
     curr_date, prev_date = get_dates(request.form['StartDate'])
     url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(request.form['TickerName']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
+    print(url, file=sys.stderr)
     
     df, temp, temp2, new_idx = plot_components(url)
     plot = create_plot(df, temp, temp2, new_idx)

@@ -69,7 +69,7 @@ def output_page():
     api_key = 'gw2NbPXKQYZkf46yfNQS'
 
     url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(ticker) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
-    #print(url, sys.stderr)
+    print(url, sys.stderr)
             
     response = requests.get(url)
     meta_data = response.json()

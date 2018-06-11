@@ -89,19 +89,23 @@ select{
 	color:red;
 }
 </style>
-
+<link href="https://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.css" rel="stylesheet">
+<link href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.5.min.css" rel="stylesheet">
 </head>
     
 <body>
-{{ the_div|safe }}
-<script src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.js"></script>
-<script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.5.min.js"></script>
-{{ the_script|safe }}
+    <li>
+    {{ the_div|safe }}
+    <script src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.js"></script>
+    <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.5.min.js"></script>
+    {{ the_script|safe }}
+    </li>
+
       
 <form id='output' method='get' action='index'> <!-- action is the URL you want to move to next-->
-    <p>
+    <li>
     <input type='submit' value='Return' /> <!-- value is the text that will appear on the button. -->
-    </p>
+    </li>
 </form>
 </body>
 </html>

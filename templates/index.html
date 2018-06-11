@@ -1,54 +1,45 @@
 <!doctype html>
 <title>Stock Ticker</title>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
-<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-</head>
+<form>
     
-<div class=page>
-  <h1>Closing Price Search</h1>
-    <div class=metanav>
+<ul class="form-style-1">
+    <h4>
+    Input a stock ticker symbol (e.g., GOOG) and <br>  
+    date (e.g., 2016-02-03) to see the performance <br>
+    over the selected period of time:
+    </h4>
     
-        <h4>
-            Input a stock ticker symbol (e.g., GOOG) and <br>  
-            date (e.g., 2016-02-03) to see the performance <br>
-            over the selected period of time:
-        </h4>
-
-        <form id='index' method='post' action='output'> <!-- action is the URL you want to move to next-->
-            <p>
-            Stock Ticker: <input type='text' name='TickerName' />
-            </p>
-            <p>
-            Date: <input type='text' name='StartDate' />
-            </p>
-            <fieldset data-role="controlgroup" data-type="horizontal">
-                <legend>Period:</legend>
-                <label for="one_month">1 Month</label>
-                <input type="radio" name="Period" id="one_month" value="one_month">
-                <label for="six_months">6 Months</label>
-                <input type="radio" name="Period" id="six_months" value="six_months">
-                <label for="one_year">1 Year</label>
-                <input type="radio" name="Period" id="one_year" value="one_year">
-            </fieldset>
-            <fieldset data-role="controlgroup" data-type="horizontal">
-                <legend>Period:</legend>
-                <label for="close">Close</label>
-                <input type="radio" name="Period" id="close" value="close">
-                <label for="open">Open</label>
-                <input type="radio" name="Period" id="open" value="open">
-                <label for="range">Range</label>
-                <input type="radio" name="Period" id="range" value="range">
-            </fieldset>
-            <p>
-            <input type='submit' value='Submit' /> <!-- value is the text that will appear on the button. -->
-            </p>
-        </form>
-    </div>
-</div>
-
-
+    <li><label>Stock Ticker Symbol <span class="required">*</span></label>
+        <input type="text" name="TickerName" class="field-long" placeholder="GOOG" />
+    </li>
+    
+    <li>
+        <label>End Date <span class="required">*</span></label>
+        <input type="text" name="StartDate" class="field-long" placeholder="2016-02-03" />
+    </li>
+    
+    <li>
+        <label>Period</label>
+        <select name="Period" class="field-select">
+        <option value="one_month">1 Month</option>
+        <option value="six_months">6 Months</option>
+        <option value="one_year">1 Year</option>
+        </select>
+    </li>
+    
+    <li>
+        <label>Performance Metric</label>
+        <select name="Metric" class="field-select">
+        <option value="open">Open</option>
+        <option value="close">Close</option>
+        <option value="range">Range (Low-High)</option>
+        </select>
+    </li>
+    
+    <li>
+        <input type="submit" value="Submit" />
+    </li>
+    
+</form>
 
 

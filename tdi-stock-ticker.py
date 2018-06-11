@@ -24,7 +24,7 @@ def index_page():
     if request.method == 'GET':
         return render_template('index.html')
     else:
-        curr_date, prev_date = get_dates(request.form['StartDate'])
+        curr_date, prev_date = get_dates(request.form['StartDate'], request.form['Window'])
         url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(request.form['TickerName']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
         
         df, temp, temp2, new_idx = plot_components(url, curr_date, prev_date)
@@ -36,7 +36,7 @@ def index_page():
 @app_tdi_stock_ticker.route('/output', methods=['GET', 'POST'])
 def output_page(): 
 
-    curr_date, prev_date = get_dates(request.form['StartDate'])
+    curr_date, prev_date = get_dates(request.form['StartDate'], request.form['Window'])
     url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(request.form['TickerName']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
     
     df, temp, temp2, new_idx = plot_components(url, curr_date, prev_date)
@@ -47,9 +47,14 @@ def output_page():
 
 ##################################################################
 
-def get_dates(new_date):
+def get_dates(new_date, window_button):
     curr_date = datetime.datetime.strptime(new_date, '%Y-%m-%d').date()
-    prev_date = curr_date - datetime.timedelta(days=30)
+    if windown_button == 'one_month':
+        prev_date = curr_date - datetime.timedelta(days=30)
+    elif window_button == 'six_months':
+        prev_date = curr_date - datetime.timedelta(days=30.5*6)
+    else:
+        prev_date = curr_date - datetime.timedelta(days=365)
     return curr_date, prev_date
 
 def plot_components(url, curr_date, prev_date):

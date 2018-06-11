@@ -28,7 +28,7 @@ def index_page():
         url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(request.form['TickerName']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
         print(url, file=sys.stderr)
         
-        df, temp, temp2, new_idx = plot_components(url)
+        df, temp, temp2, new_idx = plot_components(url, curr_date, prev_date)
         plot = create_plot(df, temp, temp2, new_idx)
     
         script, div = components(plot)
@@ -41,7 +41,7 @@ def output_page():
     url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(request.form['TickerName']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
     print(url, file=sys.stderr)
     
-    df, temp, temp2, new_idx = plot_components(url)
+    df, temp, temp2, new_idx = plot_components(url, curr_date, prev_date)
     plot = create_plot(df, temp, temp2, new_idx)
     
     script, div = components(plot)
@@ -52,7 +52,7 @@ def get_dates(new_date):
     prev_date = curr_date - datetime.timedelta(days=30)
     return curr_date, prev_date
 
-def plot_components(url):
+def plot_components(url, curr_date, prev_date):
     response = requests.get(url)
     meta_data = response.json()
     data = meta_data['datatable']

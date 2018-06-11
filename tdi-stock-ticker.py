@@ -4,7 +4,7 @@ import os
 import requests
 import datetime
 import pandas as pd
-from bokeh.io import output_notebook
+#from bokeh.io import output_notebook
 from bokeh.plotting import figure, show
 from bokeh.models import ColumnDataSource
 from bokeh.models.tools import HoverTool

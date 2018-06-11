@@ -24,7 +24,7 @@ def index_page():
     if request.method == 'GET':
         return render_template('index.html')
     else:
-        curr_date, prev_date = get_dates(request.form['StartDate'], request.form['Window'])
+        curr_date, prev_date = get_dates(request.form['StartDate'], request.form['Period'])
         url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(request.form['TickerName']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
         
         df, temp, temp2, new_idx = plot_components(url, curr_date, prev_date)
@@ -36,7 +36,7 @@ def index_page():
 @app_tdi_stock_ticker.route('/output', methods=['GET', 'POST'])
 def output_page(): 
 
-    curr_date, prev_date = get_dates(request.form['StartDate'], request.form['Window'])
+    curr_date, prev_date = get_dates(request.form['StartDate'], request.form['Period'])
     url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(request.form['TickerName']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
     
     df, temp, temp2, new_idx = plot_components(url, curr_date, prev_date)
@@ -103,7 +103,7 @@ def create_plot(df, temp, temp2, new_idx):
                 fill_color="grey", hover_fill_color="firebrick",
                 fill_alpha=0, hover_alpha=0.6,
                 line_color=None, hover_line_color=None)
-    p.add_tools(HoverTool(tooltips=[("Price", "@Close")], renderers=[cr], mode='vline'))
+    p.add_tools(HoverTool(tooltips=[("Price", "@Close")], renderers=[cr], mode='mouse'))
     return p
     
 if __name__ == '__main__':

@@ -3,13 +3,13 @@
 <link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-0.10.0.min.css" type="text/css" />
     
 <div class=page>
-  <h1>Monthly Closing Price Search</h1>
+  <h1>Closing Price Search</h1>
     <div class=metanav>
     
         <h4>
             Input a stock ticker symbol (e.g., GOOG) and <br>  
             date (e.g., 2016-02-03) to see the performance <br>
-            over the selected particular period of time:
+            over the selected period of time:
         </h4>
 
         <form id='index' method='post' action='output'> <!-- action is the URL you want to move to next-->
@@ -19,9 +19,12 @@
             <p>
             Date: <input type='text' name='StartDate' />
             </p>
-            <input type="radio" name="Window" value="one_month" checked> 1 Month<br>
-            <input type="radio" name="Window" value="six_months"> 6 Months<br>
-            <input type="radio" name="Window" value="one_year"> 1 Year
+            <input type="radio" name="Period" value="one_month" checked> 1 Month
+            <input type="radio" name="Price" value="close" chekced> Close<br>
+            <input type="radio" name="Period" value="six_months"> 6 Months
+            <input type="radio" name="Price" value="open"> Open<br>
+            <input type="radio" name="Period" value="one_year"> 1 Year
+            <input type="radio" name="Price" value="range"> 1 Month
             <p>
             <input type='submit' value='Submit' /> <!-- value is the text that will appear on the button. -->
             </p>

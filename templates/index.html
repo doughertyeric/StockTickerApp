@@ -7,8 +7,8 @@
     <div class=metanav>
     
         <h4>
-            Input a stock ticker (e.g., 'GOOG' or 'AAPL') 
-            and a date (e.g., 2016-02-03) to see the closing 
+            Input a stock ticker (e.g., 'GOOG' or 'AAPL') <br>
+            and a date (e.g., 2016-02-03) to see the closing <br>
             prices of the stock over the previous month:
         </h4>
 
@@ -19,6 +19,9 @@
             <p>
             Date: <input type='text' name='StartDate' />
             </p>
+            <input type="radio" name="Window" value="one_month" checked> 1 Month<br>
+            <input type="radio" name="Window" value="six_months"> 6 Months<br>
+            <input type="radio" name="Window" value="one_year"> 1 Year
             <p>
             <input type='submit' value='Submit' /> <!-- value is the text that will appear on the button. -->
             </p>

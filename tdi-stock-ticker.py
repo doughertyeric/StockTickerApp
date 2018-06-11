@@ -128,7 +128,7 @@ def create_plot(df, temp, temp2, new_idx):
     return p
     
 if __name__ == '__main__':
-    #app_tdi_stock_ticker.secret_key = 'co8ryqw/oi~cg%wfk#jxycs*zg7lw48v0q$rc'
-    #port = int(os.environ.get('PORT', 5000))
-    #app_tdi_stock_ticker.run(host='0.0.0.0', port=port)
-    app_tdi_stock_ticker.run(debug=True)
+    app_tdi_stock_ticker.secret_key = 'co8ryqw/oi~cg%wfk#jxycs*zg7lw48v0q$rc'
+    port = int(os.environ.get('PORT', 5000))
+    app_tdi_stock_ticker.run(host='0.0.0.0', port=port)
+    #app_tdi_stock_ticker.run(debug=True)

@@ -88,18 +88,23 @@ select{
 .form-style-1 .required{
 	color:red;
 }
+.form-style-1 image_container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 </style>
 <link href="https://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.css" rel="stylesheet">
 <link href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.5.min.css" rel="stylesheet">
 </head>
     
 <body>
-    <label>
+    <div id='image_container'>
         {{ the_div|safe }}
         <script src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.js"></script>
         <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.5.min.js"></script>
         {{ the_script|safe }}
-    </label>
+    </div>
     
 <ul class="form-style-1">
 <form id='output' method='get' action='index'> <!-- action is the URL you want to move to next-->

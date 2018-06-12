@@ -100,8 +100,8 @@ def create_plot(df, temp, temp2, new_idx, metric):
         p.xaxis.major_label_orientation = 3.14159/4
         p.y_range = Range1d(min_val - (0.02*min_val), max_val + (0.02*min_val))
         
-        cr = p.vbar(x, top=y2, bottom=y1, width=(6*3600*1000), 
-                    fill_color="#E08E79", hover_fill_color="#D5E1DD",
+        cr = p.vbar(x, top=y2, bottom=y1, source=source, width=(6*3600*1000), 
+                    fill_color="#E08E79", hover_fill_color="#F2583E",
                     line_color="black", hover_line_color = "white")
         p.add_tools(HoverTool(tooltips=[("High", "@High"), ("Low", "@Low")], renderers=[cr], mode='mouse'))
     elif metric == 'open':
@@ -146,6 +146,7 @@ def create_plot(df, temp, temp2, new_idx, metric):
                     fill_alpha=0, hover_alpha=0.6,
                     line_color=None, hover_line_color=None)
         p.add_tools(HoverTool(tooltips=[("Price", "@Close")], renderers=[cr], mode='mouse'))
+        
     return p
     
 if __name__ == '__main__':

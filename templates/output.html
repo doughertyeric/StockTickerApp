@@ -100,12 +100,13 @@ select{
     
 <body>
 <form id='output' method='get' action='index'> <!-- action is the URL you want to move to next-->
-<ul class="form-style-1">
-
-    {{ the_div|safe }}
-    <script src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.js"></script>
-    <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.5.min.js"></script>
-    {{ the_script|safe }}
+    <ul class="form-style-1">
+    <div id='image_container'>
+        {{ the_div|safe }}
+        <script src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.js"></script>
+        <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.5.min.js"></script>
+        {{ the_script|safe }}
+    </div>
 
     <li>
     <input type='submit' value='Return' /> <!-- value is the text that will appear on the button. -->

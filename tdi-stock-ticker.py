@@ -83,6 +83,13 @@ def create_plot(df, temp, temp2, new_idx, metric):
                     High=df['High'][:],
                     Low=df['Low'][:],
                     Close=df['Close'][:],))
+    source2 = ColumnDataSource(
+                data=dict(
+                    Date=pd.to_datetime(new_idx),
+                    Open=temp2['Open'][:],
+                    High=temp2['High'][:],
+                    Low=temp2['Low'][:],
+                    Close=temp2['Close'][:],))
     
     if metric == 'range':
         x = pd.to_datetime(new_idx)
@@ -100,7 +107,7 @@ def create_plot(df, temp, temp2, new_idx, metric):
         p.xaxis.major_label_orientation = 3.14159/4
         p.y_range = Range1d(min_val - (0.02*min_val), max_val + (0.02*min_val))
         
-        cr = p.vbar(x, top=y2, bottom=y1, source=source, width=(16*3600*1000), 
+        cr = p.vbar(x, top=y2, bottom=y1, source=source2, width=(16*3600*1000), 
                     fill_color="#E08E79", hover_fill_color="#F2583E",
                     fill_alpha=0.8, hover_alpha=1,
                     line_color="white", hover_line_color = "black")

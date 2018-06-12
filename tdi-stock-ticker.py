@@ -95,11 +95,15 @@ def create_plot(df, temp, temp2, new_idx, metric):
                 title=str(df['Ticker'][0]) + ' Intra-day Ranges between ' + \
                 str(df['Date'][0]) + ' and ' + str(df['Date'][len(df)-1]))
         
-        p.vbar(x, top=y2, bottom=y1, width=(6*3600*1000), fill_color="#E08E79", line_color="black")
         p.yaxis.axis_label = 'Price (USD)'
         p.xaxis.axis_label = 'Date'
         p.xaxis.major_label_orientation = 3.14159/4
-        p.y_range = Range1d(min_val - (0.05*min_val), max_val + (0.05*min_val))
+        p.y_range = Range1d(min_val - (0.02*min_val), max_val + (0.02*min_val))
+        
+        cr = p.vbar(x, top=y2, bottom=y1, width=(6*3600*1000), 
+                    fill_color="#E08E79", hover_fill_color="#D5E1DD",
+                    line_color="black", hover_line_color = "white")
+        p.add_tools(HoverTool(tooltips=[("High", "@High"), ("Low", "@Low")], renderers=[cr], mode='mouse'))
     elif metric == 'open':
         x1 = pd.to_datetime(temp['Date'])
         x2 = pd.to_datetime(new_idx)

@@ -28,7 +28,7 @@ def index_page():
         url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(request.form['TickerName']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
         
         df, temp, temp2, new_idx = plot_components(url, curr_date, prev_date)
-        plot = create_plot(df, temp, temp2, new_idx)
+        plot = create_plot(df, temp, temp2, new_idx, request.form['Metric'])
     
         script, div = components(plot)
         return render_template('output.html', the_script=script, the_div=div)
@@ -40,7 +40,7 @@ def output_page():
     url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(request.form['TickerName']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
     
     df, temp, temp2, new_idx = plot_components(url, curr_date, prev_date)
-    plot = create_plot(df, temp, temp2, new_idx)
+    plot = create_plot(df, temp, temp2, new_idx, request.form['Metric'])
     
     script, div = components(plot)
     return render_template('output.html', the_script=script, the_div=div)
@@ -68,15 +68,14 @@ def plot_components(url, curr_date, prev_date):
     dates = pd.DataFrame(data).iloc[:,1]
     dates= pd.to_datetime(dates)
     temp = pd.DataFrame(data, index = dates)
-    temp = temp.iloc[:,[1,5]]
-    temp.columns = ['Date', 'Close']
+    temp = temp.iloc[:,[1,5,2,4,3]]
+    temp.columns = ['Date', 'Close', 'Open', 'Low', 'High']
 
     new_idx = pd.date_range(prev_date, curr_date, freq='D')
     temp2 = temp.reindex(new_idx)
     return df, temp, temp2, new_idx
-        
 
-def create_plot(df, temp, temp2, new_idx):
+def create_plot(df, temp, temp2, new_idx, metric):
     source = ColumnDataSource(
                 data=dict(
                     Date=pd.to_datetime(df['Date']),
@@ -86,24 +85,49 @@ def create_plot(df, temp, temp2, new_idx):
                     Close=df['Close'][:],))
     
     p = figure(width=800, height=500, x_axis_type='datetime',
-                title=str(df['Ticker'][0]) + ' Closing Prices between ' + \
+                title=str(df['Ticker'][0]) + ' Performance between ' + \
                 str(df['Date'][0]) + ' and ' + str(df['Date'][len(df)-1]))
+    
+    if metric == 'range':
+        x = pd.to_datetime(new_idx)
+        y1 = temp2['Low'][:]
+        y2 = temp2['High'][:]
+        p.vbar(x, 0.7, y1, y2, fill_color="#E08E79", line_color="black")
+        p.yaxis.axis_label = 'Price (USD)'
+        p.xaxis.axis_label = 'Date'
+        p.xaxis.major_label_orientation = 3.14159/4
+    elif metric == 'open':
+        x1 = pd.to_datetime(temp['Date'])
+        x2 = pd.to_datetime(new_idx)
+        y1 = temp['Open'][:]
+        y2 = temp2['Open'][:]
+        p.line(x1, y1, line_width=1, alpha=0.5, color='grey')
+        p.line(x2, y2, line_width=3)
+        p.yaxis.axis_label = 'Price (USD)'
+        p.xaxis.axis_label = 'Date'
+        p.xaxis.major_label_orientation = 3.14159/4
 
-    x1 = pd.to_datetime(temp['Date'])
-    x2 = pd.to_datetime(new_idx)
-    y1 = temp['Close'][:]
-    y2 = temp2['Close'][:]
-    p.line(x1, y1, line_width=1, alpha=0.5, color='grey')
-    p.line(x2, y2, line_width=3)
-    p.yaxis.axis_label = 'Price (USD)'
-    p.xaxis.axis_label = 'Date'
-    p.xaxis.major_label_orientation = 3.14159/4
+        cr = p.circle('Date', 'Open', source=source, size=20,
+                    fill_color="grey", hover_fill_color="firebrick",
+                    fill_alpha=0, hover_alpha=0.6,
+                    line_color=None, hover_line_color=None)
+        p.add_tools(HoverTool(tooltips=[("Price", "@Open")], renderers=[cr], mode='mouse'))
+    else:
+        x1 = pd.to_datetime(temp['Date'])
+        x2 = pd.to_datetime(new_idx)
+        y1 = temp['Close'][:]
+        y2 = temp2['Close'][:]
+        p.line(x1, y1, line_width=1, alpha=0.5, color='grey')
+        p.line(x2, y2, line_width=3)
+        p.yaxis.axis_label = 'Price (USD)'
+        p.xaxis.axis_label = 'Date'
+        p.xaxis.major_label_orientation = 3.14159/4
 
-    cr = p.circle('Date', 'Close', source=source, size=20,
-                fill_color="grey", hover_fill_color="firebrick",
-                fill_alpha=0, hover_alpha=0.6,
-                line_color=None, hover_line_color=None)
-    p.add_tools(HoverTool(tooltips=[("Price", "@Close")], renderers=[cr], mode='mouse'))
+        cr = p.circle('Date', 'Close', source=source, size=20,
+                    fill_color="grey", hover_fill_color="firebrick",
+                    fill_alpha=0, hover_alpha=0.6,
+                    line_color=None, hover_line_color=None)
+        p.add_tools(HoverTool(tooltips=[("Price", "@Close")], renderers=[cr], mode='mouse'))
     return p
     
 if __name__ == '__main__':

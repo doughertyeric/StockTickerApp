@@ -92,7 +92,7 @@ def create_plot(df, temp, temp2, new_idx, metric):
         x = pd.to_datetime(new_idx)
         y1 = temp2['Low'][:]
         y2 = temp2['High'][:]
-        p.vbar(x, y1, y2, fill_color="#E08E79", line_color="black")
+        p.vbar(x, width=3, y1, y2, fill_color="#E08E79", line_color="black")
         p.yaxis.axis_label = 'Price (USD)'
         p.xaxis.axis_label = 'Date'
         p.xaxis.major_label_orientation = 3.14159/4

@@ -95,7 +95,7 @@ def create_plot(df, temp, temp2, new_idx, metric):
                 title=str(df['Ticker'][0]) + ' Intra-day Ranges between ' + \
                 str(df['Date'][0]) + ' and ' + str(df['Date'][len(df)-1]))
         
-        p.vbar(x, top=y2, bottom=y1, width=pd.to_datetime(500), fill_color="#E08E79", line_color="black")
+        p.vbar(x, top=y2, bottom=y1, width=(3*3600*1000), fill_color="#E08E79", line_color="black")
         p.yaxis.axis_label = 'Price (USD)'
         p.xaxis.axis_label = 'Date'
         p.xaxis.major_label_orientation = 3.14159/4

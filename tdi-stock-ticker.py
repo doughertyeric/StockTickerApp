@@ -6,7 +6,7 @@ import datetime
 import pandas as pd
 #from bokeh.io import output_notebook
 from bokeh.plotting import figure, show
-from bokeh.models import ColumnDataSource
+from bokeh.models import ColumnDataSource, Range1d
 from bokeh.models.tools import HoverTool
 from bokeh.embed import components
 from flask import Flask, request, render_template
@@ -93,13 +93,13 @@ def create_plot(df, temp, temp2, new_idx, metric):
         
         p = figure(width=800, height=500, x_axis_type='datetime',
                 title=str(df['Ticker'][0]) + ' Intra-day Ranges between ' + \
-                str(df['Date'][0]) + ' and ' + str(df['Date'][len(df)-1]),
-                y_range=(min_val - (0.05*min_val), max_val + (0.05*min_val))
+                str(df['Date'][0]) + ' and ' + str(df['Date'][len(df)-1]))
         
         p.vbar(x, 3, y1, y2, fill_color="#E08E79", line_color="black")
         p.yaxis.axis_label = 'Price (USD)'
         p.xaxis.axis_label = 'Date'
         p.xaxis.major_label_orientation = 3.14159/4
+        p.y_range = Range1d(min_val - (0.05*min_val), max_val + (0.05*min_val))
     elif metric == 'open':
         x1 = pd.to_datetime(temp['Date'])
         x2 = pd.to_datetime(new_idx)

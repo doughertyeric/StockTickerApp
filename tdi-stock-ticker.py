@@ -13,7 +13,7 @@ from flask import Flask, request, render_template
 from flask import session
 
 app_tdi_stock_ticker = Flask(__name__)
-api_key = 'gw2NbPXKQYZkf46yfNQS'
+api_key = api_key=os.environ.get('QUANDL_KEY')
 
 @app_tdi_stock_ticker.route('/')
 def pre_index():

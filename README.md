@@ -1,43 +1,7 @@
-# Flask on Heroku
+# Data Incubator Milestone Project
 
-This project is intended to help you tie together some important concepts and
-technologies from the 12-day course, including Git, Flask, JSON, Pandas,
-Requests, Heroku, and Bokeh for visualization.
+The repository here contains two alternative approaches to the Milestone project. One has been deployed on a Heroku server (edougherty-stock-ticker.herokuapp.com) while the other (app.py, which calls bokeh_plot.py), which explicitly spins up a bokeh server instance, has been resigned to functioning only on the localhost. The files of interest for the deployed application are:
 
-The repository contains a basic template for a Flask configuration that will
-work on Heroku.
-
-A [finished example](https://lemurian.herokuapp.com) that demonstrates some basic functionality.
-
-## Step 1: Setup and deploy
-- Git clone the existing template repository.
-- `Procfile`, `requirements.txt`, `conda-requirements.txt`, and `runtime.txt`
-  contain some default settings.
-- There is some boilerplate HTML in `templates/`
-- Create Heroku application with `heroku create <app_name>` or leave blank to
-  auto-generate a name.
-- (Suggested) Use the [conda buildpack](https://github.com/kennethreitz/conda-buildpack).
-  If you choose not to, put all requirements into `requirements.txt`
-
-  `heroku config:add BUILDPACK_URL=https://github.com/kennethreitz/conda-buildpack.git`
-
-  The advantages of conda include easier virtual environment management and fast package installation from binaries (as compared to the compilation that pip-installed packages sometimes require).
-  One disadvantage is that binaries take up a lot of memory, and the slug pushed to Heroku is limited to 300 MB. Another note is that the conda buildpack is being deprecated in favor of a Docker solution (see [docker branch](https://github.com/thedataincubator/flask-framework/tree/docker) of this repo for an example).
-- Deploy to Heroku: `git push heroku master`
-- You should be able to see your site at `https://<app_name>.herokuapp.com`
-- A useful reference is the Heroku [quickstart guide](https://devcenter.heroku.com/articles/getting-started-with-python-o).
-
-## Step 2: Get data from API and put it in pandas
-- Use the `requests` library to grab some data from a public API. This will
-  often be in JSON format, in which case `simplejson` will be useful.
-- Build in some interactivity by having the user submit a form which determines which data is requested.
-- Create a `pandas` dataframe with the data.
-
-## Step 3: Use Bokeh to plot pandas data
-- Create a Bokeh plot from the dataframe.
-- Consult the Bokeh [documentation](http://bokeh.pydata.org/en/latest/docs/user_guide/embed.html)
-  and [examples](https://github.com/bokeh/bokeh/tree/master/examples/embed).
-- Make the plot visible on your website through embedded HTML or other methods - this is where Flask comes in to manage the interactivity and display the desired content.
-- Some good references for Flask: [This article](https://realpython.com/blog/python/python-web-applications-with-flask-part-i/), especially the links in "Starting off", and [this tutorial](https://github.com/bev-a-tron/MyFlaskTutorial).
-
-Edited as Test (Eric Dougherty 06/05/18)
+- tdi-stock-ticker.py: This is the actual python file that is run on the web server. The app consists of three decorated functions calling the '/', '/index', and '/output' pages, respectively. There are also three helper functions (get_dates, plot_components, and create_plot). The user is required to input a Stock Ticker Symbol and an End Data, and has the option to select one of three periods (one month, six months, and one year) as well as an option to select one of three performance metrics (open price, close price, and intra-day range). These inputs rely upon the index.html file.
+- index.html: This is the HTML file containing the various input components (TickerName, EndDate, Period, and Metric). A ‘POST’ action on the webpage (i.e., hitting the ‘Submit’ button) will redirect to the output.html file.
+- output.html: This is the HTML file that takes the div and script components returned by the tdi-stock-ticker.py file and displays them. The page also contains a 'Return' button that redirects the user to the index page to input an alternative set of search variables.

@@ -85,26 +85,31 @@ def create_plot(df, temp, temp2, new_idx, metric):
                     Close=df['Close'][:],))
     
     if metric == 'range':
-        p = figure(width=800, height=500, x_axis_type='datetime',
-                title=str(df['Ticker'][0]) + ' Intra-day Ranges between ' + \
-                str(df['Date'][0]) + ' and ' + str(df['Date'][len(df)-1]))
-        
         x = pd.to_datetime(new_idx)
         y1 = temp2['Low'][:]
         y2 = temp2['High'][:]
+        min_val = y1.min()
+        max_val = y2.max()
+        
+        p = figure(width=800, height=500, x_axis_type='datetime',
+                title=str(df['Ticker'][0]) + ' Intra-day Ranges between ' + \
+                str(df['Date'][0]) + ' and ' + str(df['Date'][len(df)-1]),
+                y_range=(min_val - (0.05*min_val), max_val + (0.05*min_val))
+        
         p.vbar(x, 3, y1, y2, fill_color="#E08E79", line_color="black")
         p.yaxis.axis_label = 'Price (USD)'
         p.xaxis.axis_label = 'Date'
         p.xaxis.major_label_orientation = 3.14159/4
     elif metric == 'open':
-        p = figure(width=800, height=500, x_axis_type='datetime',
-                title=str(df['Ticker'][0]) + ' Opening Prices between ' + \
-                str(df['Date'][0]) + ' and ' + str(df['Date'][len(df)-1]))
-        
         x1 = pd.to_datetime(temp['Date'])
         x2 = pd.to_datetime(new_idx)
         y1 = temp['Open'][:]
         y2 = temp2['Open'][:]
+        
+        p = figure(width=800, height=500, x_axis_type='datetime',
+                title=str(df['Ticker'][0]) + ' Opening Prices between ' + \
+                str(df['Date'][0]) + ' and ' + str(df['Date'][len(df)-1]))
+        
         p.line(x1, y1, line_width=1, alpha=0.5, color='grey')
         p.line(x2, y2, line_width=3)
         p.yaxis.axis_label = 'Price (USD)'
@@ -117,14 +122,15 @@ def create_plot(df, temp, temp2, new_idx, metric):
                     line_color=None, hover_line_color=None)
         p.add_tools(HoverTool(tooltips=[("Price", "@Open")], renderers=[cr], mode='mouse'))
     else:
-        p = figure(width=800, height=500, x_axis_type='datetime',
-                title=str(df['Ticker'][0]) + ' Closing Prices between ' + \
-                str(df['Date'][0]) + ' and ' + str(df['Date'][len(df)-1]))
-        
         x1 = pd.to_datetime(temp['Date'])
         x2 = pd.to_datetime(new_idx)
         y1 = temp['Close'][:]
         y2 = temp2['Close'][:]
+        
+         p = figure(width=800, height=500, x_axis_type='datetime',
+                title=str(df['Ticker'][0]) + ' Closing Prices between ' + \
+                str(df['Date'][0]) + ' and ' + str(df['Date'][len(df)-1]))
+            
         p.line(x1, y1, line_width=1, alpha=0.5, color='grey')
         p.line(x2, y2, line_width=3)
         p.yaxis.axis_label = 'Price (USD)'

@@ -24,7 +24,7 @@ def index_page():
     if request.method == 'GET':
         return render_template('index.html')
     else:
-        curr_date, prev_date = get_dates(request.form['StartDate'], request.form['Period'])
+        curr_date, prev_date = get_dates(request.form['EndDate'], request.form['Period'])
         url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(request.form['TickerName']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
         
         df, temp, temp2, new_idx = plot_components(url, curr_date, prev_date)
@@ -36,7 +36,7 @@ def index_page():
 @app_tdi_stock_ticker.route('/output', methods=['GET', 'POST'])
 def output_page(): 
 
-    curr_date, prev_date = get_dates(request.form['StartDate'], request.form['Period'])
+    curr_date, prev_date = get_dates(request.form['EndDate'], request.form['Period'])
     url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(request.form['TickerName']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
     
     df, temp, temp2, new_idx = plot_components(url, curr_date, prev_date)
@@ -107,6 +107,7 @@ def create_plot(df, temp, temp2, new_idx, metric):
         p.xaxis.major_label_orientation = 3.14159/4
         p.y_range = Range1d(min_val - (0.02*min_val), max_val + (0.02*min_val))
         
+        cr = p.vbar(x, top=y2, bottom=y1, source=source2, width=(16*3600*1000), 
         cr = p.vbar(x, top=y2, bottom=y1, source=source2, width=(16*3600*1000), 
                     fill_color="#E08E79", hover_fill_color="#F2583E",
                     fill_alpha=0.8, hover_alpha=1,

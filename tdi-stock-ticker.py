@@ -111,7 +111,7 @@ def create_plot(df, temp, temp2, new_idx, metric):
                     fill_color="#E08E79", hover_fill_color="#F2583E",
                     fill_alpha=0.8, hover_alpha=1,
                     line_color="white", hover_line_color = "black")
-        p.add_tools(HoverTool(tooltips=[("High", "@High"), ("Low", "@Low")], renderers+[cr], mode='mouse'))
+        p.add_tools(HoverTool(tooltips=[("High", "@High"), ("Low", "@Low")], renderers=[cr], mode='mouse'))
     elif metric == 'open':
         x1 = pd.to_datetime(temp['Date'])
         x2 = pd.to_datetime(new_idx)

@@ -127,7 +127,7 @@ def create_plot(df, temp, temp2, new_idx, metric):
         y1 = temp['Close'][:]
         y2 = temp2['Close'][:]
         
-         p = figure(width=800, height=500, x_axis_type='datetime',
+        p = figure(width=800, height=500, x_axis_type='datetime',
                 title=str(df['Ticker'][0]) + ' Closing Prices between ' + \
                 str(df['Date'][0]) + ' and ' + str(df['Date'][len(df)-1]))
             

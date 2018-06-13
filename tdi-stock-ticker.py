@@ -26,7 +26,7 @@ def pre_index():
         
 @app_tdi_stock_ticker.route('/output', methods=['GET', 'POST'])
 def output_page(): 
-    if request.method == 'GET':
+    if request.method == 'POST':
         form_dict = {'ticker': request.form['TickerName'],
                      'date': request.form['EndDate'],
                      'period': request.form['Period'],

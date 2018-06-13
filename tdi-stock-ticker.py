@@ -26,12 +26,17 @@ def index_page():
         
 @app_tdi_stock_ticker.route('/output', methods=['GET', 'POST'])
 def output_page(): 
+    
+    form_dict = {ticker: request.form['TickerName'],
+                 date: request.form['EndDate'],
+                 period: request.form['Period'],
+                 metric: request.form['Metric']}
 
-    curr_date, prev_date = get_dates(request.form['EndDate'], request.form['Period'])
-    url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(request.form['TickerName']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
+    curr_date, prev_date = get_dates(form_dict['date'], form_dict['period'])
+    url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(form_dict['ticker']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
     
     df, temp, temp2, new_idx = plot_components(url, curr_date, prev_date)
-    plot = create_plot(df, temp, temp2, new_idx, request.form['Metric'])
+    plot = create_plot(df, temp, temp2, new_idx, form_dict['metric'])
     
     script, div = components(plot)
     return render_template('output.html', the_script=script, the_div=div)

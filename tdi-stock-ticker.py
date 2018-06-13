@@ -27,10 +27,10 @@ def index_page():
 @app_tdi_stock_ticker.route('/output', methods=['GET', 'POST'])
 def output_page(): 
     
-    form_dict = {ticker: request.form['TickerName'],
-                 date: request.form['EndDate'],
-                 period: request.form['Period'],
-                 metric: request.form['Metric']}
+    form_dict = {'ticker': request.form['TickerName'],
+                 'date': request.form['EndDate'],
+                 'period': request.form['Period'],
+                 'metric': request.form['Metric']}
 
     curr_date, prev_date = get_dates(form_dict['date'], form_dict['period'])
     url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(form_dict['ticker']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)

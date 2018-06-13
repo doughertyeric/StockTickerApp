@@ -16,13 +16,8 @@ app_tdi_stock_ticker = Flask(__name__)
 api_key = api_key=os.environ.get('QUANDL_KEY')
 
 @app_tdi_stock_ticker.route('/')
-def pre_index():
+def index_page():
     return render_template('index.html')
-
-#@app_tdi_stock_ticker.route('/index', methods=['GET', 'POST'])
-#def index_page():
-#    if request.method == 'GET':
-#        return render_template('index.html')
         
 @app_tdi_stock_ticker.route('/output', methods=['GET', 'POST'])
 def output_page(): 

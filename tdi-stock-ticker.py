@@ -19,10 +19,10 @@ api_key = api_key=os.environ.get('QUANDL_KEY')
 def pre_index():
     return render_template('index.html')
 
-@app_tdi_stock_ticker.route('/index', methods=['GET', 'POST'])
-def index_page():
-    if request.method == 'GET':
-        return render_template('index.html')
+#@app_tdi_stock_ticker.route('/index', methods=['GET', 'POST'])
+#def index_page():
+#    if request.method == 'GET':
+#        return render_template('index.html')
         
 @app_tdi_stock_ticker.route('/output', methods=['GET', 'POST'])
 def output_page(): 

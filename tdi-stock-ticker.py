@@ -26,20 +26,22 @@ def pre_index():
         
 @app_tdi_stock_ticker.route('/output', methods=['GET', 'POST'])
 def output_page(): 
-    
-    form_dict = {'ticker': request.form['TickerName'],
-                 'date': request.form['EndDate'],
-                 'period': request.form['Period'],
-                 'metric': request.form['Metric']}
+    if request.method == 'GET':
+        form_dict = {'ticker': request.form['TickerName'],
+                     'date': request.form['EndDate'],
+                     'period': request.form['Period'],
+                     'metric': request.form['Metric']}
 
-    curr_date, prev_date = get_dates(form_dict['date'], form_dict['period'])
-    url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(form_dict['ticker']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
-    
-    df, temp, temp2, new_idx = plot_components(url, curr_date, prev_date)
-    plot = create_plot(df, temp, temp2, new_idx, form_dict['metric'])
-    
-    script, div = components(plot)
-    return render_template('output.html', the_script=script, the_div=div)
+        curr_date, prev_date = get_dates(form_dict['date'], form_dict['period'])
+        url = 'https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker=' + str(form_dict['ticker']) + '&date.gte=' + str(prev_date) + '&date.lte=' + str(curr_date) + '&api_key=' + str(api_key)
+
+        df, temp, temp2, new_idx = plot_components(url, curr_date, prev_date)
+        plot = create_plot(df, temp, temp2, new_idx, form_dict['metric'])
+
+        script, div = components(plot)
+        return render_template('output.html', the_script=script, the_div=div)
+    else:
+        return render_template('index.html')
 
 ##################################################################
 
